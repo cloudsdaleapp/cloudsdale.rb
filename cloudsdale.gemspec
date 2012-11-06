@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name = 'Cloudsdale'
+  s.name = 'cloudsdale'
   s.version = '0.0.1'
   s.date = '2010-04-28'
   s.summary = "Cloudsdale.org Client"

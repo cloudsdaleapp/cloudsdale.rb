@@ -1,14 +1,16 @@
 require 'test/unit'
 require 'cloudsdale'
 
-class CloudsdaleTest < Test::Unit::TestCase
+auth_token = ""
+username = ""
+password = ""
 
-  def test_cloudsdale_message_send
+before :each do
+  @cloudsdale = Cloudsdale::Module.new(auth_token, username, password)
+end
 
+describe Cloudsdale do 
+  it "takes three parameters and returns a Module object"
+    @cloudsdale.should be_an_instance_of Cloudsdale::Module
   end
-
-  def test_cloudsdale_message_listen
-
-  end
-
 end

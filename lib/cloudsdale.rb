@@ -1,4 +1,5 @@
 require 'faye'
+require 'datamapper'
 
 # The base Cloudsdale module
 class Cloudsdale::Module
@@ -11,7 +12,9 @@ class Cloudsdale::Module
   # @param [String] The username the module is to operate under
   # @param [String] The password the modules is to use to operate
   def initialize(auth_key, username, password)
-
+    @auth_key = auth_key
+    @username = username
+    @password = password
   end
 
 end
