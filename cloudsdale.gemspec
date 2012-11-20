@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 
   s.files = [
     "lib/cloudsdale.rb",
-    "lib/models/user.rb"
+    "lib/models/user.rb",
     "lib/models/cloud.rb",
     "spec/lib/cloudsdale_spec.rb",
     "spec/lib/spec_helper.rb"
@@ -21,12 +21,12 @@ Gem::Specification.new do |s|
     %q{spec/lib/spec_helper.rb}
   ]
   
-  s.add_development_dependency "rspec",
-    ["= 2.11.0"]
-  s.add_runtime_dependency "faye",
-    ["~> 0.8.6"]
-  s.add_runtime_dependency "rest-client",
-    ["~> 1.6.7"]
-  s.add_runtime_dependency "json",
-    ["~> 1.7.5"]
+  s.add_development_dependency "rspec", ["= 2.11.0"]
+  s.add_development_dependency "pry", ['~> 0.9.10']
+  s.add_runtime_dependency "faye", ["~> 0.8.6"]
+  s.add_runtime_dependency "json", ["~> 1.7.5"]
+  s.add_runtime_dependency "faraday", ['~> 0.8.4']
+  s.add_runtime_dependency "faraday_middleware", ['~> 0.9.0']
+  s.add_runtime_dependency "hashie", ['~> 1.2.0']
+  s.add_runtime_dependency "data_mapper", ['~> 1.2.0']
 end
