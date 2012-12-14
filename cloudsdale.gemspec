@@ -10,8 +10,14 @@ Gem::Specification.new do |s|
 
   s.files = [
     "lib/cloudsdale.rb",
-    "lib/models/user.rb",
-    "lib/models/cloud.rb",
+    "lib/cloudsdale/client.rb",
+    "lib/cloudsdale/version.rb",
+    "lib/cloudsdale/api/api.rb",
+    "lib/cloudsdale/models/avatar.rb",
+    "lib/cloudsdale/models/ban.rb",
+    "lib/cloudsdale/models/chat.rb",
+    "lib/cloudsdale/models/cloud.rb",
+    "lib/cloudsdale/models/user.rb",
     "spec/lib/cloudsdale_spec.rb",
     "spec/lib/spec_helper.rb"
   ]
@@ -20,7 +26,7 @@ Gem::Specification.new do |s|
     %q{spec/lib/cloudsdale_spec.rb},
     %q{spec/lib/spec_helper.rb}
   ]
-  
+
   s.add_development_dependency "rspec", ["= 2.11.0"]
   s.add_development_dependency "pry", ['~> 0.9.10']
   s.add_runtime_dependency "faye", ["~> 0.8.6"]

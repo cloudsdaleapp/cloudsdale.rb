@@ -1,5 +1,4 @@
 class Avatar
-
   include DataMapper::Resource
 
   property :normal,   String

@@ -7,18 +7,15 @@ require 'faraday'
 require 'hashie'
 require 'faraday_middleware'
 
-
-
 class Cloudsdale::API
 
   def initialize
-    @connection = Faraday.new 'http://www.cloudsdale.org' do |c|
-      c.request :json
-      c.response :json, :content_type => /\bjson$/
-
-      c.use :instrumentation
-
-      c.adapter :em_http
+    @connection = Faraday.new(
+      url: 'http://www.cloudsdale.org',
+      headers: { user_agent: 'cloudsdale-ruby' }) do |c|
+        c.request :json
+        c.response :json, :content_type => /\bjson$/
+        c.adapter :em_http
     end
   end
 

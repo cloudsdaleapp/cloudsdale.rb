@@ -5,7 +5,7 @@ class Cloud
   property :id,             String,   key: true
   property :name,           String
   property :description,    String
-  property :created_at,     Time
+  property :created_at,     DateTime
   property :rules,          String
   property :hidden,         Boolean
   property :member_count,   Integer
@@ -13,10 +13,10 @@ class Cloud
   property :short_name,     String
   property :is_transient,   Boolean
   property :owner_id,       String
-  property :user_ids,       List
-  property :moderator_ids,  List
 
-  has 1, :avatar, 'Avatar'
-  has 1, :chat,   'Chat'
+  has n, :user_ids
+  has n, :moderator_ids
+  has 1, :avatar
+  has 1, :chat
 
 end
