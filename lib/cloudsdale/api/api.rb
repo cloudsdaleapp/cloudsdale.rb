@@ -32,6 +32,23 @@ class Cloudsdale::API
     check_response_for_errors resp.body
   end
 
+  # This accepts a hash of options for extensibility, but 
+  # currently, the only scheme for user lookup is by ID
+  def get_user(options = {})
+    resp = @connection.get do |req|
+      req.url "v1/users/#{options[:id]}.json"
+    end
+    check_response_for_errors resp.body
+  end
+
+  # This accepts a hash of options with either an :id or :shortname
+  def get_cloud(options = {})
+    resp = @connection.get do |req|
+      req.url "v1/clouds/#{options[:id] || options[:shortname]}.json"
+    end
+    check_response_for_errors resp.body
+  end
+
   private
 
   def check_response_for_errors(json)

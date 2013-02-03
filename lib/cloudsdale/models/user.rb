@@ -25,7 +25,7 @@ class User
   property :preferred_status,               Enum[ :offline, :online, :away, :busy ],                                    default: :online
   property :role,                           Enum[ :normal, :donor, :legacy, :associate, :admin, :developer, :founder ], default: :normal
 
-  has n, :also_known_as,  model: String
+  # No current support for AKAs, add this later
   has n, :clouds
   has 1, :avatar
   has n, :bans

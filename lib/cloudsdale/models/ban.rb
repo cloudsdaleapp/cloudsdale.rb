@@ -1,7 +1,7 @@
 class Ban
 	include DataMapper::Resource
 
-	property :id,									String
+	property :id,									String,			key: true
 	property :reason,							String
 	property :due,								DateTime
 	property :created_at,					DateTime

@@ -14,8 +14,8 @@ class Cloud
   property :is_transient,   Boolean
   property :owner_id,       String
 
-  has n, :user_ids
-  has n, :moderator_ids
+  has n, :users
+  has n, :moderators, User
   has 1, :avatar
   has 1, :chat
 
