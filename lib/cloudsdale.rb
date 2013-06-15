@@ -1,6 +1,7 @@
 # Load in DataMapper
 # Change the setup to meet your DB needs
 require 'data_mapper'
+require 'dm-types'
 DataMapper.setup(:default, 'abstract::')
 
 # API objects

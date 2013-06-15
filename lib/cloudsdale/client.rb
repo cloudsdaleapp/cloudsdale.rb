@@ -3,7 +3,7 @@ module Cloudsdale
   class Client
 
     attr_reader :api
-    attr_accessor :username, :password, :connected, :user
+    attr_accessor :username, :password, :connected, :user, :client_id, :client_secret
 
     # options - A hash containing the options to init with
     #           :username => Username to login with

@@ -6,16 +6,44 @@ require 'faraday'
 # isn't *impossible* with hashie, it's not ideal.
 require 'hashie'
 require 'faraday_middleware'
+require 'bcrypt'
 
 class Cloudsdale::API
+
+  attr_accessor :auth_token
+  attr_accessor :internal_token
 
   def initialize
     @connection = Faraday.new(
       url: 'http://www.cloudsdale.org',
-      headers: { user_agent: 'cloudsdale-ruby' }) do |c|
-        c.request :json
-        c.response :json, :content_type => /\bjson$/
-        c.adapter :em_http
+      headers: { user_agent: 'cloudsdale-ruby', :Accept => 'application/json' }
+    ) do |c|
+      c.request :json
+      c.response :json, :content_type => /\bjson$/
+      c.adapter :em_http
+    end
+  end
+
+  def auth_token=(token)
+    @connection.headers['X-Auth-Token'] = token
+    @auth_token = token
+  end
+
+  def authenticate(app_id, app_secret, username, password, grant_type=:password)
+    resp = @connection.post do |req|
+      req.path = 'oauth/token'
+      req.body = { 
+        client_id: app_id,
+        client_secret: app_secret,
+        password: password,
+        identifier: username,
+        grant_type: grant_type
+      }.to_json
+    end
+    unless response_has_errors(resp.body)
+      token = resp.body['access_token']
+      self.auth_token = token
+      return token
     end
   end
 
@@ -23,35 +51,65 @@ class Cloudsdale::API
   # using different credentials.  Right now, public API only allows
   # logins using username and password combinations, so that's all
   # I'm going to implement
-  def get_session(options = {})
+  def get_session(email, password)
     resp = @connection.post do |req|
       req.headers = { :Accept => 'application/json'}
-      req.url 'v1/sessions'
-      req.body = options.to_json
+      req.path = 'v1/sessions'
+      req.body = {
+        email: email,
+        password: password
+      }.to_json
     end
-    check_response_for_errors resp.body
+    response_has_errors(resp.body)
+    p resp.body
+    result = resp.body['result']
+    self.auth_token = result['user']['auth_token']
+    result
+  end
+
+  # Requires internal token.
+  def get_session_by_id(user_id)
+
   end
 
   # This accepts a hash of options for extensibility, but 
   # currently, the only scheme for user lookup is by ID
   def get_user(options = {})
     resp = @connection.get do |req|
-      req.url "v1/users/#{options[:id]}.json"
+      req.path = "v1/users/#{options[:id]}.json"
     end
-    check_response_for_errors resp.body
+    response_has_errors(resp.body)
+    resp.body['result']
   end
 
   # This accepts a hash of options with either an :id or :shortname
   def get_cloud(options = {})
     resp = @connection.get do |req|
-      req.url "v1/clouds/#{options[:id] || options[:shortname]}.json"
+      req.path "v1/clouds/#{options[:id] || options[:shortname]}.json"
     end
     check_response_for_errors resp.body
   end
 
+  def post_message(cloud_id = nil, content = '', device = 'robot')
+    resp = @connection.post do |req|
+      req.path = "v1/clouds/#{cloud_id}/chat/messages"
+      req.body = {
+        client_id: '12345678',
+        content: content,
+        device: device
+      }
+    end
+    response_has_errors(resp.body)
+    resp.body['result']
+  end
+
   private
 
-  def check_response_for_errors(json)
-    json
+  def response_has_errors(json)
+    errors = json['errors']
+    return false if errors.nil? || errors.length == 0
+
+    message = json['flash']['message']
+    raise ArgumentError, message
   end
 end
