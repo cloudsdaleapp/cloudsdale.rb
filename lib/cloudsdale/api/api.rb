@@ -51,7 +51,7 @@ class Cloudsdale::API
   # using different credentials.  Right now, public API only allows
   # logins using username and password combinations, so that's all
   # I'm going to implement
-  def get_session(email, password)
+  def get_session(email, password, &block)
     resp = @connection.post do |req|
       req.headers = { :Accept => 'application/json'}
       req.path = 'v1/sessions'
@@ -60,11 +60,13 @@ class Cloudsdale::API
         password: password
       }.to_json
     end
-    response_has_errors(resp.body)
-    p resp.body
-    result = resp.body['result']
-    self.auth_token = result['user']['auth_token']
-    result
+    resp.on_complete do
+      response_has_errors(resp.body)
+      p resp.body
+      result = Hashie::Mash.new(resp.body['result'])
+      self.auth_token = result.user.auth_token
+      block.call(result)
+    end
   end
 
   # Requires internal token.
@@ -74,23 +76,28 @@ class Cloudsdale::API
 
   # This accepts a hash of options for extensibility, but 
   # currently, the only scheme for user lookup is by ID
-  def get_user(options = {})
+  def get_user(options = {}, &block)
     resp = @connection.get do |req|
       req.path = "v1/users/#{options[:id]}.json"
     end
-    response_has_errors(resp.body)
-    resp.body['result']
+    resp.on_complete do
+      response_has_errors(resp.body)
+      block.call(resp.body['result'])
+    end
   end
 
   # This accepts a hash of options with either an :id or :shortname
-  def get_cloud(options = {})
+  def get_cloud(options = {}, &block)
     resp = @connection.get do |req|
       req.path "v1/clouds/#{options[:id] || options[:shortname]}.json"
     end
-    check_response_for_errors resp.body
+    resp.on_complete do
+      response_has_errors(resp.body)
+      block.call(resp.body['result'])
+    end
   end
 
-  def post_message(cloud_id = nil, content = '', device = 'robot')
+  def post_message(cloud_id = nil, content = '', device = 'robot', &block)
     resp = @connection.post do |req|
       req.path = "v1/clouds/#{cloud_id}/chat/messages"
       req.body = {
@@ -99,8 +106,10 @@ class Cloudsdale::API
         device: device
       }
     end
-    response_has_errors(resp.body)
-    resp.body['result']
+    resp.on_complete do
+      response_has_errors(resp.body)
+      block.call(resp.body['result'])
+    end
   end
 
   private
@@ -111,5 +120,6 @@ class Cloudsdale::API
 
     message = json['flash']['message']
     raise ArgumentError, message
+    true
   end
 end

@@ -1,22 +1,31 @@
-class Cloud
+require 'cloudsdale/models/avatar'
+require 'cloudsdale/models/chat'
 
-  include DataMapper::Resource
+module Cloudsdale; end
 
-  property :id,             String,   key: true
-  property :name,           String
-  property :description,    String
-  property :created_at,     DateTime
-  property :rules,          String
-  property :hidden,         Boolean
-  property :member_count,   Integer
-  property :drop_count,     Integer
-  property :short_name,     String
-  property :is_transient,   Boolean
-  property :owner_id,       String
+module Cloudsdale::Models
+  class Cloud < Base
+    property :name
+    property :short_name
+    property :description
+    property :created_at
+    property :rules
+    property :hidden
+    property :member_count
+    property :drop_count
+    property :short_nam
+    property :is_transient
+    property :owner_id
 
-  has n, :users
-  has n, :moderators, User
-  has 1, :avatar
-  has 1, :chat
+    property :user_ids
+    property :users, :transform_with => -> arr { arr.map { |u| User.new(u)}}
+    
+    property :moderator_ids
+    property :moderators, :transform_with => -> arr { arr.map { |u| User.new(u)}}
+    property :avatar
+    property :chat
 
+    coerce_key :avatar, Avatar
+    coerce_key :chat, Chat
+  end
 end

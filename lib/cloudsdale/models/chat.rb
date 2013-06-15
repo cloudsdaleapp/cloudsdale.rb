@@ -1,7 +1,8 @@
-class Chat
+module Cloudsdale; end
 
-  include DataMapper::Resource
+module Cloudsdale::Models
+  class Chat < Base
+    property :last_message_at
 
-  property :last_message_at,  DateTime,   key: true
-
+  end
 end

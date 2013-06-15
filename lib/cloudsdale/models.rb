@@ -1,0 +1,8 @@
+require 'cloudsdale/models/base'
+require 'cloudsdale/models/cloud'
+require 'cloudsdale/models/user'
+require 'cloudsdale/models/ban'
+require 'cloudsdale/models/avatar'
+require 'cloudsdale/models/session'
+require 'cloudsdale/models/chat'
+require 'cloudsdale/models/message'

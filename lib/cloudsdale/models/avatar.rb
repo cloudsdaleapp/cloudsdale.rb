@@ -1,10 +1,12 @@
-class Avatar
-  include DataMapper::Resource
+module Cloudsdale; end
 
-  property :normal,   String,   key: true
-  property :mini,     String
-  property :thumb,    String
-  property :preview,  String
-  property :chat,     String
+module Cloudsdale::Models
+  class Avatar < Base
+    property :normal
+    property :mini
+    property :thumb
+    property :preview
+    property :chat
 
+  end
 end

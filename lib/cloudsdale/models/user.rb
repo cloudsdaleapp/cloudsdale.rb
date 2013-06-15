@@ -1,33 +1,40 @@
-class User
-  include DataMapper::Resource
+require 'cloudsdale/models/avatar'
+module Cloudsdale; end
 
-  property :id,                             String,   key: true
-  property :name,                           String
-  property :email,                          String
-  property :skype_name,                     String
-  property :auth_token,                     String
-  property :time_zone,                      String
-  property :role,                           Integer,  default: 0
-  property :member_since,                   DateTime
-  property :invisible,                      Boolean
-  property :force_password_change,          Boolean
-  property :reason_for_suspension,          String
-  property :suspended_until,                DateTime
-  property :is_registered,                  Boolean
-  property :is_banned,                      Boolean
-  property :is_member_of_a_cloud,           Boolean
-  property :is_transient,                   Boolean
-  property :has_an_avatar,                  Boolean
-  property :has_read_tnc,                   Boolean
-  property :needs_to_confirm_registration,  Boolean
-  property :needs_password_change,          Boolean
-  property :needs_name_change,              Boolean
-  property :preferred_status,               Enum[ :offline, :online, :away, :busy ],                                    default: :online
-  property :role,                           Enum[ :normal, :donor, :legacy, :associate, :admin, :developer, :founder ], default: :normal
+module Cloudsdale::Models
+  class User < Base
+    property :name
+    property :email
+    property :skype_name
+    property :auth_token
+    property :time_zone
+    property :role
+    property :member_since
+    property :invisible
+    property :force_password_change
+    property :reason_for_suspension
+    property :suspended_until
+    property :is_registered
+    property :is_banned
+    property :is_member_of_a_cloud
+    property :is_transient
+    property :has_an_avatar
+    property :has_read_tnc
+    property :needs_to_confirm_registration
+    property :needs_password_change
+    property :needs_name_change
+    property :needs_email_change
+    property :needs_username_change
+    property :preferred_status
+    property :role
+    property :clouds, :transform_with => -> arr { arr.map { |c| Cloud.new(c)}}
+    property :bans, :transform_with => -> arr { arr.map { |b| Ban.new(b)}}
+    property :avatar
+    property :also_known_as
+    property :status
+    property :username
+    property :username_changes_allowed
 
-  # No current support for AKAs, add this later
-  has n, :clouds
-  has 1, :avatar
-  has n, :bans
-
+    coerce_key :avatar, Avatar
+  end
 end
