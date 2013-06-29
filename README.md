@@ -1,4 +1,6 @@
-Cloudsdale-Gem
+cloudsdale.rb
 ==============
 
-A client gem for Cloudsdale.org
+Ruby library for @cloudsdaleapp
+
+http://www.cloudsdale.org
